@@ -1,0 +1,122 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.hestia.dao;
+
+// Les imports
+import com.hestia.config.DatabaseConnection;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import com.hestia.model.Users;
+
+/**
+ *
+ * @author hp
+ */
+public class UserDAO {
+    
+    // Méthode pour récupérer les rôles 
+    public List<String> getRoles() {
+        List<String> listRoles = new ArrayList<>(); 
+        String sql = "SELECT DISTINCT role FROM Users";
+        
+        try (Connection con = DatabaseConnection.getConnect();
+            PreparedStatement pst = con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery())
+        {
+            
+            while(rs.next()) 
+            {
+                listRoles.add(rs.getString("role"));
+            }
+            
+            rs.close();
+            pst.close();
+            
+        } catch(SQLException e) {
+            System.out.println("Erreur dans UserDAO (getRoles) : " + e.getMessage());
+        }
+        return listRoles;
+    }
+    
+    //Méthode pour enregistrer les utilisateurs
+    public boolean addUser(Users user)
+    {
+        String sql = "INSERT INTO Users (username, password, role) VALUES (?, ?, ?)";
+        
+        try(Connection con = DatabaseConnection.getConnect();
+            PreparedStatement pst = con.prepareStatement(sql))
+        {
+            // On remplit les ? avec les données de l'objet 'user'
+            pst.setString(1, user.getUsername());
+            pst.setString(2, user.getPassword());
+            pst.setString(3, user.getRole());
+            
+            // On renvoie le nombre de lignes insérées
+            int rowsAffected = pst.executeUpdate();
+            
+            return rowsAffected > 0;
+        }
+        catch(SQLException e)
+        {
+            System.err.println("Erreur lors de l'ajout : " + e.getMessage());
+            
+        }
+        return false;
+    }
+    
+    // Méthode pour vérifier si l'utilisateur existe déjà
+    public boolean isUsernameTaken(String username) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE username = ?";
+
+        try (Connection con = DatabaseConnection.getConnect();
+             PreparedStatement pst = con.prepareStatement(sql)) {
+
+            pst.setString(1, username);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    // Si le compte est supérieur à 0, ça veut dire que le nom existe déjà
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur de vérification : " + e.getMessage());
+        }
+        return false; 
+    }
+    
+    // Méthode pour afficher les informations de l'utilisateur
+    public List<Users> getAllUsers()
+    {
+        List<Users> liste = new ArrayList<>();
+        
+        // Sélectionner les informations dans la BDD
+        String sql = "SELECT user_id, username, role FROM Users ORDER BY user_id DESC";
+        
+        // Essayer de se connecter à la BDD
+        try(Connection con = DatabaseConnection.getConnect();
+            PreparedStatement pst = con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery())
+        {
+            while(rs.next())
+            {
+                //Créer l'objet et remplir 
+                Users u = new Users();
+                u.setUserid(rs.getInt("user_id"));
+                u.setUsername(rs.getString("username"));
+                u.setRole(rs.getString("role"));
+                
+                // AJouter l'objet dans la liste
+                liste.add(u);
+            }
+        }
+        catch(SQLException e)
+        {
+             System.err.println("Erreur de liste : " + e.getMessage());
+        }
+        return liste;
+    }
+}
