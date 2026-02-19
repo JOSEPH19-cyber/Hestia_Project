@@ -166,4 +166,25 @@ public class UserDAO {
         }
         return false;
     }
+    
+    // Méthode pour supprimer un utilisateur
+    public boolean deleteUser(int id)
+    {
+        String sql = "DELETE FROM Users WHERE user_id = ?";
+        
+         try(Connection con = DatabaseConnection.getConnect();
+            PreparedStatement pst = con.prepareStatement(sql))
+        {
+            pst.setInt(1, id);
+            return pst.executeUpdate()> 0;
+
+        }
+        catch(SQLException e)
+        {
+            System.err.println("Erreur lors de la suppression : " + e.getMessage());
+            
+        }
+        return false;
+        
+    }
 }
