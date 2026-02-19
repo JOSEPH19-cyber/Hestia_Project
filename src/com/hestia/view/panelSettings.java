@@ -126,6 +126,27 @@ public class panelSettings extends javax.swing.JPanel {
         });
     }
     
+    // Méthode pour filtrer un utilisateur
+    private void loadSearchData(String searchText) {
+        UserDAO dao = new UserDAO();
+        
+        // Récupérer la liste filtrée depuis le DAO
+        List<Users> users = dao.searchUsers(searchText);
+
+        DefaultTableModel model = (DefaultTableModel) tableUsers.getModel();
+        // on vide le tableau pour rafraîchir
+        model.setRowCount(0); 
+
+        for (Users u : users) {
+            Object[] row = {
+                u.getUserid(),
+                u.getUsername(),
+                u.getRole()
+            };
+            model.addRow(row);
+        }
+    }
+    
     // Méthode pour rafraîchir le tableau après modification du user
     private void clearFields() {
         txtUsername.setText("");
@@ -177,7 +198,7 @@ public class panelSettings extends javax.swing.JPanel {
         btnUpdateUser = new javax.swing.JButton();
         btnDeleteUser = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
-        btnSearchUser = new javax.swing.JTextField();
+        txtSearchUser = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableUsers = new javax.swing.JTable();
 
@@ -421,10 +442,15 @@ public class panelSettings extends javax.swing.JPanel {
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel11.setText("RECHERCHE");
 
-        btnSearchUser.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        btnSearchUser.setMaximumSize(new java.awt.Dimension(200, 30));
-        btnSearchUser.setMinimumSize(new java.awt.Dimension(200, 30));
-        btnSearchUser.setPreferredSize(new java.awt.Dimension(200, 30));
+        txtSearchUser.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtSearchUser.setMaximumSize(new java.awt.Dimension(200, 30));
+        txtSearchUser.setMinimumSize(new java.awt.Dimension(200, 30));
+        txtSearchUser.setPreferredSize(new java.awt.Dimension(200, 30));
+        txtSearchUser.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSearchUserKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlFormUserLayout = new javax.swing.GroupLayout(pnlFormUser);
         pnlFormUser.setLayout(pnlFormUserLayout);
@@ -461,7 +487,7 @@ public class panelSettings extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnSearchUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtSearchUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24))
         );
         pnlFormUserLayout.setVerticalGroup(
@@ -470,7 +496,7 @@ public class panelSettings extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(pnlFormUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSearchUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSearchUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
                 .addGap(22, 22, 22)
                 .addGroup(pnlFormUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -673,13 +699,17 @@ public class panelSettings extends javax.swing.JPanel {
     }
     }//GEN-LAST:event_btnDeleteUserActionPerformed
 
+    private void txtSearchUserKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchUserKeyReleased
+        // On récupère le texte et on lance la recherche
+        loadSearchData(txtSearchUser.getText().trim());
+    }//GEN-LAST:event_txtSearchUserKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddRoom;
     private javax.swing.JButton btnAddUser;
     private javax.swing.JButton btnDeleteRoom;
     private javax.swing.JButton btnDeleteUser;
-    private javax.swing.JTextField btnSearchUser;
     private javax.swing.JButton btnUpdateRoom;
     private javax.swing.JButton btnUpdateUser;
     private javax.swing.JComboBox<String> cbCategory;
@@ -709,6 +739,7 @@ public class panelSettings extends javax.swing.JPanel {
     private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtRoomNumber;
     private javax.swing.JTextField txtSearchRoom;
+    private javax.swing.JTextField txtSearchUser;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
 }

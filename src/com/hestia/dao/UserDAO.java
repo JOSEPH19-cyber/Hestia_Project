@@ -172,7 +172,7 @@ public class UserDAO {
     {
         String sql = "DELETE FROM Users WHERE user_id = ?";
         
-         try(Connection con = DatabaseConnection.getConnect();
+        try(Connection con = DatabaseConnection.getConnect();
             PreparedStatement pst = con.prepareStatement(sql))
         {
             pst.setInt(1, id);
@@ -186,5 +186,40 @@ public class UserDAO {
         }
         return false;
         
+    }
+    
+    // Méthode pour rechercher un utilisateur
+    public List<Users> searchUsers(String search) {
+        List<Users> list = new ArrayList<>();
+        String sql = "SELECT * FROM Users WHERE username LIKE ?"; 
+        
+        try(Connection con = DatabaseConnection.getConnect();
+            PreparedStatement pst = con.prepareStatement(sql))
+        {
+            // Appliquer le filtrage sur le nom
+            pst.setString(1, "%" + search + "%");
+            
+            ResultSet rs = pst.executeQuery();
+            while(rs.next())
+            {
+                // Récupérer les données de la ligne actuelle
+                int id = rs.getInt("user_id");
+                String name = rs.getString("username");
+                String pass = rs.getString("password");
+                String role = rs.getString("role");
+                
+                // Créer l'objet Users les données récupérées
+                Users user = new Users(id, name, pass, role);
+                
+                // Ajouter l'objet à la liste
+                list.add(user);
+            }
+        }
+        catch(SQLException e)
+        {
+            System.err.println("Erreur lors de la recherche : " + e.getMessage());
+            
+        }
+        return list;
     }
 }
