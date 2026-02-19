@@ -22,13 +22,13 @@
             <file>file:/D:/hestia/src/com/hestia/view/DlgBooking.java</file>
             <file>file:/D:/hestia/src/com/hestia/view/DlgEditBooking.java</file>
             <file>file:/D:/hestia/src/com/hestia/view/DlgInvoice.java</file>
-            <file>file:/D:/hestia/src/dao/CategorieDAO.java</file>
-            <file>file:/D:/hestia/src/dao/ClientDAO.java</file>
-            <file>file:/D:/hestia/src/dao/consumptionDAO.java</file>
-            <file>file:/D:/hestia/src/dao/ReservationDAO.java</file>
-            <file>file:/D:/hestia/src/dao/RoomDAO.java</file>
-            <file>file:/D:/hestia/src/dao/ServiceDAO.java</file>
-            <file>file:/D:/hestia/src/dao/UserDAO.java</file>
+            <file>file:/D:/hestia/src/com/hestia/dao/UserDAO.java</file>
+            <file>file:/D:/hestia/src/com/hestia/dao/CategorieDAO.java</file>
+            <file>file:/D:/hestia/src/com/hestia/dao/consumptionDAO.java</file>
+            <file>file:/D:/hestia/src/com/hestia/dao/ServiceDAO.java</file>
+            <file>file:/D:/hestia/src/com/hestia/dao/RoomDAO.java</file>
+            <file>file:/D:/hestia/src/com/hestia/dao/ReservationDAO.java</file>
+            <file>file:/D:/hestia/src/com/hestia/dao/ClientDAO.java</file>
         </group>
     </open-files>
 </project-private>

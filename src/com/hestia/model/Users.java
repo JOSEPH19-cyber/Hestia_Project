@@ -35,6 +35,13 @@ public class Users {
         this.role = role;
     }
     
+     // Constructeur pour la modification user sans mot de passe
+    public Users(int user_id, String username, String role) {
+        this.user_id = user_id;
+        this.username = username;
+        this.role = role;
+    }
+    
     // Getters
     public int getUserid(){return user_id;}
     public String getUsername(){return username;}

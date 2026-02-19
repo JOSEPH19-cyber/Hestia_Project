@@ -55,9 +55,7 @@ public class UserDAO {
             pst.setString(3, user.getRole());
             
             // On renvoie le nombre de lignes insérées
-            int rowsAffected = pst.executeUpdate();
-            
-            return rowsAffected > 0;
+            return pst.executeUpdate() > 0;
         }
         catch(SQLException e)
         {
@@ -118,5 +116,54 @@ public class UserDAO {
              System.err.println("Erreur de liste : " + e.getMessage());
         }
         return liste;
+    }
+    
+    // Méthode de modification avec mot de passe 
+    public boolean updateUser(Users user)
+    {
+        String sql = "UPDATE Users SET username = ?, password = ?, role = ? WHERE user_id = ?";
+        
+        try(Connection con = DatabaseConnection.getConnect();
+            PreparedStatement pst = con.prepareStatement(sql))
+        {
+            // On remplit les ? avec les données de l'objet 'user'
+            pst.setString(1, user.getUsername());
+            pst.setString(2, user.getPassword());
+            pst.setString(3, user.getRole());
+            pst.setInt(4, user.getUserid());
+            
+            // On renvoie les nombres des lignes insérées
+            return pst.executeUpdate() > 0;
+        }
+        catch(SQLException e)
+        {
+            System.err.println("Erreur UPDATE (Full) : " + e.getMessage());
+            
+        }
+        return false;
+    }
+    
+    // Méthode de modification sans le mot de passe
+    public boolean updateUserWithoutPassword(Users user)
+    {
+        String sql = "UPDATE Users SET username = ?, role = ? WHERE user_id = ?";
+        
+        try(Connection con = DatabaseConnection.getConnect();
+            PreparedStatement pst = con.prepareStatement(sql))
+        {
+            // On remplit les ? avec les données de l'objet 'user'
+            pst.setString(1, user.getUsername());
+            pst.setString(2, user.getRole());
+            pst.setInt(3, user.getUserid());
+            
+            // On renvoie le nombre de lignes insérées
+            return pst.executeUpdate() > 0;
+        }
+        catch(SQLException e)
+        {
+            System.err.println("Erreur UPDATE (Basic) : " + e.getMessage());
+            
+        }
+        return false;
     }
 }

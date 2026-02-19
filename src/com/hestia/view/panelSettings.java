@@ -9,6 +9,7 @@ import com.hestia.dao.UserDAO;
 import com.hestia.model.Users;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -24,6 +25,7 @@ public class panelSettings extends javax.swing.JPanel {
         initComponents();
         loadRoles();
         loadUserData();
+        initTableEvent();
         tableUsers.setDefaultEditor(Object.class, null);
     }
     
@@ -52,7 +54,7 @@ public class panelSettings extends javax.swing.JPanel {
     }
     
     
-    // Comparaison du mdp hasher avec la méthode hashage
+    // Méthode de hashage
     private String hashPassword(String password) 
     {
         try 
@@ -99,6 +101,37 @@ public class panelSettings extends javax.swing.JPanel {
             // Ajouter la ligne au modèle
             model.addRow(row);
         }
+    }
+    
+    // Méthode pour remplir les champs des utilisateurs à la selection d'une ligne
+    private void initTableEvent() {
+        tableUsers.getSelectionModel().addListSelectionListener((ListSelectionEvent event) -> {
+            // Agir si l'action de selection est terminée
+            if (!event.getValueIsAdjusting()) {
+                // Vérifier si une ligne a été selectionée
+                int row = tableUsers.getSelectedRow();
+                if (row != -1) {
+                    // Extraire les donneés des cellules du tableau
+                    String nom = tableUsers.getValueAt(row, 1).toString();
+                    String role = tableUsers.getValueAt(row, 2).toString();
+                    
+                    // Renvoyer les données vers les champs
+                    txtUsername.setText(nom);
+                    cbRole.setSelectedItem(role);
+                    
+                    // Vider le champ mot de passe pour la sécurité
+                    txtPassword.setText("");
+                }
+            }
+        });
+    }
+    
+    // Méthode pour rafraîchir le tableau après modification du user
+    private void clearFields() {
+        txtUsername.setText("");
+        txtPassword.setText("");
+        cbRole.setSelectedIndex(0); 
+        tableUsers.clearSelection(); 
     }
     
     
@@ -375,6 +408,7 @@ public class panelSettings extends javax.swing.JPanel {
         btnUpdateUser.setMaximumSize(new java.awt.Dimension(120, 30));
         btnUpdateUser.setMinimumSize(new java.awt.Dimension(120, 30));
         btnUpdateUser.setPreferredSize(new java.awt.Dimension(120, 30));
+        btnUpdateUser.addActionListener(this::btnUpdateUserActionPerformed);
 
         btnDeleteUser.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnDeleteUser.setText("SUPPRIMER");
@@ -547,6 +581,62 @@ public class panelSettings extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Erreur technique lors de l'enregistrement.", "Erreur", JOptionPane.ERROR_MESSAGE);
        }
     }//GEN-LAST:event_btnAddUserActionPerformed
+
+    private void btnUpdateUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateUserActionPerformed
+        
+        int selectedRow = tableUsers.getSelectedRow();
+    
+        // vérifier si une ligne a été selectionée
+        if(selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une ligne dans le tableau !");
+            return; 
+        }
+
+        // Récupérer et nettoyer les données
+        int id = Integer.parseInt(tableUsers.getValueAt(selectedRow, 0).toString());
+        String username = txtUsername.getText().trim();
+        String password = new String(txtPassword.getPassword());
+        String role = cbRole.getSelectedItem().toString();
+
+        // Vérifier si le champ Nom et Rôle sont vides
+        if(username.isEmpty() || role.equals("--- Choisir un rôle ---")) {
+            JOptionPane.showMessageDialog(this, "Les champs Nom et Rôle doivent obligatoirement être remplis !");
+            return; 
+        }
+
+        // Initialisation de l'indicateur de réussite et instanciation de la DAO
+        boolean success = false;
+        UserDAO dao = new UserDAO(); 
+
+        // Vérifier si le mot de passe est viode
+        if(password.isEmpty()) {
+            // CAS A : Pas de changement de mot de passe
+            Users user = new Users(id,username, role);
+            success = dao.updateUserWithoutPassword(user);
+        } 
+        else {
+            // CAS B : Changement de mot de passe et vérification de la taille
+            if(password.length() < 4 || password.length() > 8) {
+                JOptionPane.showMessageDialog(this, "Le nouveau mot de passe doit faire entre 4 et 8 caractères !");
+                return;
+            }
+            
+            // Hasher le mot de passe
+            String mdpHashe = hashPassword(password);
+            
+            Users user = new Users(id, username, mdpHashe, role); 
+            success = dao.updateUser(user);
+        }
+
+        // Résultat final
+        if(success) {
+            JOptionPane.showMessageDialog(this, "Utilisateur mis à jour avec succès !");
+            loadUserData(); 
+            clearFields();
+        } else {
+            JOptionPane.showMessageDialog(this, "Erreur lors de la mise à jour en base de données.");
+        }
+    }//GEN-LAST:event_btnUpdateUserActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
