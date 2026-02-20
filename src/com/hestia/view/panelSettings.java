@@ -18,21 +18,23 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author hp
  */
-public class panelSettings extends javax.swing.JPanel {
+public final class panelSettings extends javax.swing.JPanel {
 
     /**
      * Creates new form panelUsers
      */
     public panelSettings() {
         initComponents();
-        loadRoles();
-        loadUserData();
-        initTableEvent();
+        loadUserRoles();
+        loadUserTable();
+        setupUserTableSelectionListener();
+        loadCategoriesTable();
+        setupCategoryTableSelectionListener();
         tableUsers.setDefaultEditor(Object.class, null);
     }
     
-    // Méthode pour charger les rôles
-    private void loadRoles()
+    // Méthode pour charger les rôles des utilisateurs
+    private void loadUserRoles()
     {
         try {
             UserDAO dao = new UserDAO();
@@ -78,9 +80,9 @@ public class panelSettings extends javax.swing.JPanel {
     }
     
     // Méthode pour afficher les informations du Users dans tabUsers
-    public final void loadUserData()
+    public void loadUserTable()
     {
-        // Récupérer le modèle du tableau (DefaultTableModel)
+        // Récupérer le modèle du tableau 
         DefaultTableModel model = (DefaultTableModel) tableUsers.getModel();
         
         // vider le tableau
@@ -100,13 +102,13 @@ public class panelSettings extends javax.swing.JPanel {
                 u.getRole()
             };
             
-            // Ajouter la ligne au modèle
+            // Ajouter la ligne au tableau
             model.addRow(row);
         }
     }
     
     // Méthode pour remplir les champs des utilisateurs à la selection d'une ligne
-    private void initTableEvent() {
+    private void setupUserTableSelectionListener() {
         tableUsers.getSelectionModel().addListSelectionListener((ListSelectionEvent event) -> {
             // Agir si l'action de selection est terminée
             if (!event.getValueIsAdjusting()) {
@@ -129,7 +131,7 @@ public class panelSettings extends javax.swing.JPanel {
     }
     
     // Méthode pour filtrer un utilisateur
-    private void loadSearchData(String searchText) {
+    private void filterUsersTable(String searchText) {
         UserDAO dao = new UserDAO();
         
         // Récupérer la liste filtrée depuis le DAO
@@ -149,13 +151,79 @@ public class panelSettings extends javax.swing.JPanel {
         }
     }
     
-    // Méthode pour rafraîchir le tableau après modification du user
-    private void clearFields() {
+    // Méthode pour afficher les informations des catégories des chambres
+    public void loadCategoriesTable()
+    {
+        // Récupérer le modèle du tableau
+        DefaultTableModel model = (DefaultTableModel) tableCategories.getModel();
+        
+        // Vider le tableau
+        model.setRowCount(0);
+        
+        // Appeler la DAO pour récupérer la liste
+        CategorieDAO dao = new CategorieDAO();
+        List<Categories> maListe = dao.getAllCategories();
+        
+        // Boucler pour rajourte chaque catégorie au tableau
+        for(Categories c : maListe)
+        {
+            // Créer un bojet pour représenter une ligne
+            Object[] row = {
+                c.getCategoryid(),
+                c.getCategorytype(),
+                c.getNightlyprice(),
+                c.getMaxcapacity()
+            };
+            
+            // Ajouter la ligne au tableau
+            model.addRow(row);
+        }
+         
+    }
+    
+    // Méthode pour remplir les champs des catégories à la selection d'une ligne
+    private void setupCategoryTableSelectionListener()
+    {
+        tableCategories.getSelectionModel().addListSelectionListener((ListSelectionEvent event) -> {
+            // Agir si l'action de selection est terminée
+            if (!event.getValueIsAdjusting()) {
+                // Vérifier si une ligne a été selectionée
+                int row = tableCategories.getSelectedRow();
+                if (row != -1) {
+                    // Extraire les donneés des cellules du tableau
+                    String category_type = tableCategories.getValueAt(row, 1).toString();
+                    String nightly_price = tableCategories.getValueAt(row, 2).toString();
+                    String capacity_max = tableCategories.getValueAt(row, 3).toString();
+                    int capacity = Integer.parseInt(capacity_max);
+                    
+                    // Renvoyer les données vers les champs
+                    txtCategoryType.setText(category_type);
+                    txtNightlyPrice.setText(nightly_price);
+                    spnMaxCapacity.setValue(capacity);
+                    
+                }
+            }
+        });
+    }
+    
+    // Méthode pour vider les champs du formulaire Utilisateur
+    private void clearUserFields() 
+    {
         txtUsername.setText("");
         txtPassword.setText("");
         cbRole.setSelectedIndex(0); 
         tableUsers.clearSelection(); 
     }
+    
+    // Méthode pour vider les champs du formulaire Catégorie
+    private void clearCategoryFields()
+    {
+        txtCategoryType.setText("");
+        spnMaxCapacity.setValue(1);
+        txtNightlyPrice.setText("");
+        tableCategories.clearSelection();
+    }
+            
     
     
 
@@ -491,12 +559,13 @@ public class panelSettings extends javax.swing.JPanel {
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
+        tableUsers.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         tableUsers.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Noms", "Rôles"
+                "ID", "NOMS", "ROLES"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -574,6 +643,7 @@ public class panelSettings extends javax.swing.JPanel {
         btnUpdateCategory.setMaximumSize(new java.awt.Dimension(120, 30));
         btnUpdateCategory.setMinimumSize(new java.awt.Dimension(120, 30));
         btnUpdateCategory.setPreferredSize(new java.awt.Dimension(120, 30));
+        btnUpdateCategory.addActionListener(this::btnUpdateCategoryActionPerformed);
 
         btnDeleteCategory.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnDeleteCategory.setText("SUPPRIMER");
@@ -583,7 +653,7 @@ public class panelSettings extends javax.swing.JPanel {
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel14.setText("AJOUTER UNE UNE CATEGORY DES CHAMBRES");
+        jLabel14.setText("AJOUTER UNE CATEGORIE DES CHAMBRES");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -647,6 +717,7 @@ public class panelSettings extends javax.swing.JPanel {
 
         tabCategories.add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
+        tableCategories.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         tableCategories.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -655,10 +726,24 @@ public class panelSettings extends javax.swing.JPanel {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "TYPES", "PRIX/NUIT", "CAPACITE MAX"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane3.setViewportView(tableCategories);
+        if (tableCategories.getColumnModel().getColumnCount() > 0) {
+            tableCategories.getColumnModel().getColumn(0).setResizable(false);
+            tableCategories.getColumnModel().getColumn(1).setResizable(false);
+            tableCategories.getColumnModel().getColumn(2).setResizable(false);
+            tableCategories.getColumnModel().getColumn(3).setResizable(false);
+        }
 
         tabCategories.add(jScrollPane3, java.awt.BorderLayout.CENTER);
 
@@ -710,13 +795,10 @@ public class panelSettings extends javax.swing.JPanel {
        {
             JOptionPane.showMessageDialog(this, "Utilisateur ajouté avec succès !");
 
-            // Vider les champs
-            txtUsername.setText("");
-            txtPassword.setText("");
-            cbRole.setSelectedIndex(0);
-            
-            // Raffraîchir le tableau
-            loadUserData();
+            // Mise à jour de l'interface
+            loadUserTable();
+            clearUserFields();
+            txtUsername.requestFocus();
         } 
        else 
        {
@@ -774,8 +856,9 @@ public class panelSettings extends javax.swing.JPanel {
         if(success) {
             JOptionPane.showMessageDialog(this, "Utilisateur mis à jour avec succès !");
             // Mise à jour de l'interface
-            loadUserData(); 
-            clearFields();
+            loadUserTable(); 
+            clearUserFields();
+            txtUsername.requestFocus();
         } else {
             JOptionPane.showMessageDialog(this, "Erreur lors de la mise à jour en base de données.");
         }
@@ -809,8 +892,8 @@ public class panelSettings extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Utilisateur supprimé avec succès !");
 
                 // Mise à jour de l'interface
-                loadUserData(); 
-                clearFields(); 
+                loadUserTable(); 
+                clearUserFields(); 
             } else {
                 JOptionPane.showMessageDialog(this, "Erreur : Impossible de supprimer l'utilisateur.");
             }
@@ -819,7 +902,7 @@ public class panelSettings extends javax.swing.JPanel {
 
     private void txtSearchUserKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchUserKeyReleased
         // On récupère le texte et on lance la recherche
-        loadSearchData(txtSearchUser.getText().trim());
+        filterUsersTable(txtSearchUser.getText().trim());
     }//GEN-LAST:event_txtSearchUserKeyReleased
 
     private void txtNightlyPriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNightlyPriceActionPerformed
@@ -884,18 +967,64 @@ public class panelSettings extends javax.swing.JPanel {
         {
             JOptionPane.showMessageDialog(this, "Catégorie ajoutée avec succès ! ");
             
-            // Vider les champs
-            txtCategoryType.setText("");
-            spnMaxCapacity.setValue(1);
-            txtNightlyPrice.setText("");
-            
-            // On va écrire une méthode pour raffraîchir le tableau et on va l'importer ici
+            // Mise à jour de l'interface
+            loadCategoriesTable();
+            clearCategoryFields();
+            txtCategoryType.requestFocus();
         }
         else
         {
             JOptionPane.showMessageDialog(this, "Erreur technique lors de l'enregistrement.", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnAddCategoryActionPerformed
+
+    private void btnUpdateCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateCategoryActionPerformed
+        
+        int selectedRow = tableCategories.getSelectedRow();
+
+        // Vérifier si une ligne est selectionnée
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une catégorie dans le tableau !");
+            return;
+        }
+
+        // Récupérer et nettoyer les données
+        int id = Integer.parseInt(tableCategories.getValueAt(selectedRow, 0).toString());
+        String category_type = txtCategoryType.getText().trim();
+        String nightly_price = txtNightlyPrice.getText().trim().replace(",", ".");
+        int capacity_max = (int) spnMaxCapacity.getValue();
+
+        // Vérifier si les champs sont vides
+        if (category_type.isEmpty() || nightly_price.isEmpty() || capacity_max <= 0) {
+            JOptionPane.showMessageDialog(this, "Tous les champs doivent être Remplis !");
+            return;
+        }
+
+        try 
+        {
+            double price = Double.parseDouble(nightly_price);
+            
+            // Appel à la DAO
+            Categories cat = new Categories(id, category_type, price, capacity_max);
+            CategorieDAO dao = new CategorieDAO();
+
+            if (dao.updateCategory(cat)) 
+            {
+                JOptionPane.showMessageDialog(this, "Catégorie mise à jour avec succès!");
+                // Mise à jour de l'interface
+                loadCategoriesTable();
+                clearCategoryFields(); 
+                txtCategoryType.requestFocus();
+            } 
+            else 
+            {
+                JOptionPane.showMessageDialog(this, "Erreur lors de la mise à jour.");
+            }
+        } 
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Prix invalide !");
+        }
+    }//GEN-LAST:event_btnUpdateCategoryActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

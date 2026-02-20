@@ -16,7 +16,7 @@ public class Categories {
     private double nightly_price;
     private int  max_capacity;
     
-    // Constructeur vise
+    // Constructeur vide
     public Categories(){}
     
     // Constructeur pour l'insertion
@@ -45,5 +45,5 @@ public class Categories {
     public void setCategoryid(int category_id){this.category_id = category_id;}
     public void setCategorytype(String category_type){this.category_type = category_type;}
     public void setNightlyprice(double nightly_price){this.nightly_price = nightly_price;}
-    public void setMax_capacity(int max_capacity){this.max_capacity = max_capacity;}
+    public void setMaxcapacity(int max_capacity){this.max_capacity = max_capacity;}
 }

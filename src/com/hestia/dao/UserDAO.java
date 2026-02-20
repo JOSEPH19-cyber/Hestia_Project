@@ -113,7 +113,7 @@ public class UserDAO {
         }
         catch(SQLException e)
         {
-             System.err.println("Erreur de liste : " + e.getMessage());
+            System.err.println("Erreur lors de l'affichage : " + e.getMessage());
         }
         return liste;
     }

@@ -58,4 +58,60 @@ public class CategorieDAO {
         }
         return false; 
     }
+    
+    // Méthode pour afficher les catégories
+    public List<Categories> getAllCategories()
+    {
+        List<Categories> liste = new ArrayList<>();
+        
+        // Sélectionner les informations dans la BDD
+        String sql = "SELECT category_id, category_type, nightly_price, max_capacity FROM Categories oRDER BY category_id DESC";
+        
+        // Se connecter à la BDD
+        try(Connection con = DatabaseConnection.getConnect();
+            PreparedStatement pst = con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery())
+        {
+            while(rs.next())
+            {
+                // Créer l'objet et remplir 
+                Categories c = new Categories();
+                c.setCategoryid(rs.getInt("category_id"));
+                c.setCategorytype(rs.getString("category_type"));
+                c.setNightlyprice(rs.getDouble("nightly_price"));
+                c.setMaxcapacity(rs.getInt("max_capacity"));
+                
+                // Ajouter l'objet dans la liste
+                liste.add(c);
+            }
+        }
+        catch(SQLException e)
+        {
+            System.err.println("Erreur lors de l'affichage : " + e.getMessage());
+        }
+        return liste;
+    }
+    
+    // Méthode pour modifier une catégorie
+    public boolean updateCategory(Categories cat) {
+        
+        String sql = "UPDATE categories SET category_type = ?, nightly_price = ?, max_capacity = ? WHERE category_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            // On remplit les ? avec les données de l'objet 'cat'
+            ps.setString(1, cat.getCategorytype());
+            ps.setDouble(2, cat.getNightlyprice());
+            ps.setInt(3, cat.getMaxcapacity());
+            ps.setInt(4, cat.getCategoryid()); 
+
+            // On renvoie les nombres des lignes inséreées
+            return ps.executeUpdate() > 0;
+            
+        } catch (SQLException e) {
+            System.out.println("Erreur Update Category : " + e.getMessage());
+            return false;
+        }
+    }
 }
