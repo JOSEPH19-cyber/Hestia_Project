@@ -7,6 +7,8 @@ package com.hestia.view;
 // Les imports
 import com.hestia.dao.UserDAO;
 import com.hestia.model.Users;
+import com.hestia.dao.CategorieDAO;
+import com.hestia.model.Categories;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -171,8 +173,6 @@ public class panelSettings extends javax.swing.JPanel {
         pnlFomrCham = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         txtRoomNumber = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         cbCategory = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
@@ -181,8 +181,6 @@ public class panelSettings extends javax.swing.JPanel {
         btnDeleteRoom = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         txtSearchRoom = new javax.swing.JTextField();
-        spnMaxCapacity = new javax.swing.JSpinner();
-        spnPriceNight = new javax.swing.JSpinner();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableChambres = new javax.swing.JTable();
         tabUsers = new javax.swing.JPanel();
@@ -201,6 +199,22 @@ public class panelSettings extends javax.swing.JPanel {
         txtSearchUser = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableUsers = new javax.swing.JTable();
+        tabCategories = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        spnMaxCapacity = new javax.swing.JSpinner();
+        jLabel7 = new javax.swing.JLabel();
+        txtNightlyPrice = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        txtCategoryType = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        txtSearchCategory = new javax.swing.JTextField();
+        btnAddCategory = new javax.swing.JButton();
+        btnUpdateCategory = new javax.swing.JButton();
+        btnDeleteCategory = new javax.swing.JButton();
+        jLabel14 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tableCategories = new javax.swing.JTable();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setMaximumSize(new java.awt.Dimension(900, 700));
@@ -224,14 +238,6 @@ public class panelSettings extends javax.swing.JPanel {
         txtRoomNumber.setMaximumSize(new java.awt.Dimension(150, 30));
         txtRoomNumber.setMinimumSize(new java.awt.Dimension(150, 30));
         txtRoomNumber.setPreferredSize(new java.awt.Dimension(150, 30));
-
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("Prix/Nuit ($)");
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("Capacité max");
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -270,94 +276,60 @@ public class panelSettings extends javax.swing.JPanel {
         jLabel10.setText("RECHERCHE");
 
         txtSearchRoom.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtSearchRoom.setMaximumSize(new java.awt.Dimension(150, 30));
-        txtSearchRoom.setMinimumSize(new java.awt.Dimension(150, 30));
-        txtSearchRoom.setPreferredSize(new java.awt.Dimension(150, 30));
-
-        spnMaxCapacity.setMaximumSize(new java.awt.Dimension(80, 30));
-        spnMaxCapacity.setMinimumSize(new java.awt.Dimension(80, 30));
-        spnMaxCapacity.setPreferredSize(new java.awt.Dimension(80, 30));
-        spnMaxCapacity.setRequestFocusEnabled(false);
-
-        spnPriceNight.setMaximumSize(new java.awt.Dimension(80, 30));
-        spnPriceNight.setMinimumSize(new java.awt.Dimension(80, 30));
-        spnPriceNight.setPreferredSize(new java.awt.Dimension(80, 30));
+        txtSearchRoom.setMaximumSize(new java.awt.Dimension(200, 30));
+        txtSearchRoom.setMinimumSize(new java.awt.Dimension(200, 30));
+        txtSearchRoom.setPreferredSize(new java.awt.Dimension(200, 30));
 
         javax.swing.GroupLayout pnlFomrChamLayout = new javax.swing.GroupLayout(pnlFomrCham);
         pnlFomrCham.setLayout(pnlFomrChamLayout);
         pnlFomrChamLayout.setHorizontalGroup(
             pnlFomrChamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlFomrChamLayout.createSequentialGroup()
-                .addGroup(pnlFomrChamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlFomrChamLayout.createSequentialGroup()
-                        .addGroup(pnlFomrChamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlFomrChamLayout.createSequentialGroup()
-                                .addGap(250, 250, 250)
-                                .addComponent(spnMaxCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlFomrChamLayout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(52, 52, 52)))
-                        .addGap(18, 18, 18))
-                    .addGroup(pnlFomrChamLayout.createSequentialGroup()
-                        .addGap(58, 58, 58)
-                        .addGroup(pnlFomrChamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(44, 44, 44)
-                        .addComponent(txtRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(56, 56, 56)))
-                .addGroup(pnlFomrChamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spnPriceNight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnlFomrChamLayout.createSequentialGroup()
+                .addContainerGap(59, Short.MAX_VALUE)
+                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43)
+                .addComponent(txtRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(64, 64, 64)
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(101, 101, 101))
             .addGroup(pnlFomrChamLayout.createSequentialGroup()
-                .addGroup(pnlFomrChamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlFomrChamLayout.createSequentialGroup()
-                        .addGap(159, 159, 159)
-                        .addComponent(btnAddRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(137, 137, 137)
-                        .addComponent(btnUpdateRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(132, 132, 132)
-                        .addComponent(btnDeleteRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlFomrChamLayout.createSequentialGroup()
-                        .addGap(316, 316, 316)
-                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)
-                        .addComponent(txtSearchRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
+                .addComponent(txtSearchRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
+            .addGroup(pnlFomrChamLayout.createSequentialGroup()
+                .addGap(159, 159, 159)
+                .addComponent(btnAddRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(137, 137, 137)
+                .addComponent(btnUpdateRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(132, 132, 132)
+                .addComponent(btnDeleteRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlFomrChamLayout.setVerticalGroup(
             pnlFomrChamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlFomrChamLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel5)
-                .addGap(27, 27, 27)
                 .addGroup(pnlFomrChamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel9)
-                    .addComponent(spnPriceNight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel10)
+                    .addComponent(txtSearchRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(69, 69, 69)
                 .addGroup(pnlFomrChamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
                     .addComponent(cbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spnMaxCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                    .addComponent(jLabel8)
+                    .addComponent(txtRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addGroup(pnlFomrChamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAddRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnUpdateRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDeleteRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(39, 39, 39)
-                .addGroup(pnlFomrChamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(txtSearchRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28))
+                .addGap(97, 97, 97))
         );
 
         tabRooms.add(pnlFomrCham, java.awt.BorderLayout.PAGE_START);
@@ -546,6 +518,152 @@ public class panelSettings extends javax.swing.JPanel {
 
         jTabbedPane1.addTab("UTILISATEURS", tabUsers);
 
+        tabCategories.setLayout(new java.awt.BorderLayout());
+
+        jPanel1.setMaximumSize(new java.awt.Dimension(900, 300));
+        jPanel1.setMinimumSize(new java.awt.Dimension(900, 300));
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setText("Capacité max");
+
+        spnMaxCapacity.setModel(new javax.swing.SpinnerNumberModel(1, 1, 10, 1));
+        spnMaxCapacity.setMaximumSize(new java.awt.Dimension(80, 30));
+        spnMaxCapacity.setMinimumSize(new java.awt.Dimension(80, 30));
+        spnMaxCapacity.setPreferredSize(new java.awt.Dimension(80, 30));
+        spnMaxCapacity.setRequestFocusEnabled(false);
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("Prix/Nuit ($)");
+
+        txtNightlyPrice.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtNightlyPrice.setMaximumSize(new java.awt.Dimension(150, 30));
+        txtNightlyPrice.setMinimumSize(new java.awt.Dimension(150, 30));
+        txtNightlyPrice.setPreferredSize(new java.awt.Dimension(150, 30));
+        txtNightlyPrice.addActionListener(this::txtNightlyPriceActionPerformed);
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("TYPE");
+
+        txtCategoryType.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtCategoryType.setMaximumSize(new java.awt.Dimension(150, 30));
+        txtCategoryType.setMinimumSize(new java.awt.Dimension(150, 30));
+        txtCategoryType.setName(""); // NOI18N
+        txtCategoryType.setPreferredSize(new java.awt.Dimension(150, 30));
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel13.setText("RECHERCHE");
+
+        txtSearchCategory.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtSearchCategory.setMaximumSize(new java.awt.Dimension(200, 30));
+        txtSearchCategory.setMinimumSize(new java.awt.Dimension(200, 30));
+        txtSearchCategory.setPreferredSize(new java.awt.Dimension(200, 30));
+
+        btnAddCategory.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnAddCategory.setText("AJOUTER");
+        btnAddCategory.setMaximumSize(new java.awt.Dimension(120, 30));
+        btnAddCategory.setMinimumSize(new java.awt.Dimension(120, 30));
+        btnAddCategory.setPreferredSize(new java.awt.Dimension(120, 30));
+        btnAddCategory.addActionListener(this::btnAddCategoryActionPerformed);
+
+        btnUpdateCategory.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnUpdateCategory.setText("MODIFIER");
+        btnUpdateCategory.setMaximumSize(new java.awt.Dimension(120, 30));
+        btnUpdateCategory.setMinimumSize(new java.awt.Dimension(120, 30));
+        btnUpdateCategory.setPreferredSize(new java.awt.Dimension(120, 30));
+
+        btnDeleteCategory.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnDeleteCategory.setText("SUPPRIMER");
+        btnDeleteCategory.setMaximumSize(new java.awt.Dimension(120, 30));
+        btnDeleteCategory.setMinimumSize(new java.awt.Dimension(120, 30));
+        btnDeleteCategory.setPreferredSize(new java.awt.Dimension(120, 30));
+
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel14.setText("AJOUTER UNE UNE CATEGORY DES CHAMBRES");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(162, 162, 162)
+                .addComponent(btnAddCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(99, 99, 99)
+                .addComponent(btnUpdateCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnDeleteCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(109, 109, 109))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtSearchCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)
+                        .addComponent(txtCategoryType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(73, 73, 73)
+                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(spnMaxCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(57, 57, 57)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(42, 42, 42)
+                        .addComponent(txtNightlyPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(37, 37, 37))))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(txtSearchCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14))
+                .addGap(95, 95, 95)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtNightlyPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(spnMaxCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel6)
+                    .addComponent(txtCategoryType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(61, 61, 61)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAddCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUpdateCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDeleteCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(62, Short.MAX_VALUE))
+        );
+
+        tabCategories.add(jPanel1, java.awt.BorderLayout.PAGE_START);
+
+        tableCategories.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(tableCategories);
+
+        tabCategories.add(jScrollPane3, java.awt.BorderLayout.CENTER);
+
+        jTabbedPane1.addTab("Categories", tabCategories);
+
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -585,7 +703,7 @@ public class panelSettings extends javax.swing.JPanel {
        // Hashage du mot de passe
        String mdpHashe = hashPassword(password);
        
-       // 5. Création de l'objet et Enregistrement
+       // Création de l'objet et Enregistrement
        Users newuser = new Users(username, mdpHashe, role);
        
        if(dao.addUser(newuser)) 
@@ -673,30 +791,30 @@ public class panelSettings extends javax.swing.JPanel {
             return; 
         }
     
-    // Récupérer l'id à supprimer
-    int id = Integer.parseInt(tableUsers.getValueAt(selectedRow, 0).toString());
-    
-    // Demander la confirmation
-    int opt = JOptionPane.showConfirmDialog(this, 
-            "Êtes-vous sûr de vouloir supprimer définitivement cet utilisateur ?", 
-            "Confirmation de suppression", 
-            JOptionPane.YES_NO_OPTION, 
-            JOptionPane.WARNING_MESSAGE); 
+        // Récupérer l'id à supprimer
+        int id = Integer.parseInt(tableUsers.getValueAt(selectedRow, 0).toString());
+
+        // Demander la confirmation
+        int opt = JOptionPane.showConfirmDialog(this, 
+                "Êtes-vous sûr de vouloir supprimer définitivement cet utilisateur ?", 
+                "Confirmation de suppression", 
+                JOptionPane.YES_NO_OPTION, 
+                JOptionPane.WARNING_MESSAGE); 
             
-    if (opt == JOptionPane.YES_OPTION) {
-        UserDAO dao = new UserDAO();
-        
-        // Exécuter la suppression
-        if (dao.deleteUser(id)) {
-            JOptionPane.showMessageDialog(this, "Utilisateur supprimé avec succès !");
-            
-            // Mise à jour de l'interface
-            loadUserData(); 
-            clearFields(); 
-        } else {
-            JOptionPane.showMessageDialog(this, "Erreur : Impossible de supprimer l'utilisateur.");
+        if (opt == JOptionPane.YES_OPTION) {
+            UserDAO dao = new UserDAO();
+
+            // Exécuter la suppression
+            if (dao.deleteUser(id)) {
+                JOptionPane.showMessageDialog(this, "Utilisateur supprimé avec succès !");
+
+                // Mise à jour de l'interface
+                loadUserData(); 
+                clearFields(); 
+            } else {
+                JOptionPane.showMessageDialog(this, "Erreur : Impossible de supprimer l'utilisateur.");
+            }
         }
-    }
     }//GEN-LAST:event_btnDeleteUserActionPerformed
 
     private void txtSearchUserKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchUserKeyReleased
@@ -704,12 +822,90 @@ public class panelSettings extends javax.swing.JPanel {
         loadSearchData(txtSearchUser.getText().trim());
     }//GEN-LAST:event_txtSearchUserKeyReleased
 
+    private void txtNightlyPriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNightlyPriceActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNightlyPriceActionPerformed
+
+    private void btnAddCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddCategoryActionPerformed
+        
+        // Récupérer et nettoyer les données 
+        String category_type = txtCategoryType.getText().trim();
+        int max_capacity = (int) spnMaxCapacity.getValue();
+        String nightly_price = txtNightlyPrice.getText().trim();
+        double price = 0;
+        
+        // Vérifier si les champs ne sont pas vides
+        if(category_type.isEmpty() || nightly_price.isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs !");
+            return;
+        }
+        
+        // Vérifier que la capité maximum n'est pas  nulle
+        if(max_capacity <= 0)
+        {
+            JOptionPane.showMessageDialog(this, "La capacité doit être d'au moins une personne !");
+            return;
+        }
+        
+        // Parser le prix
+        try
+        {
+            //on remplace la virgule par un point
+            price = Double.parseDouble(nightly_price.replace(",", "."));
+            
+            // Vérifier si le prix n'est pas négatif
+            if(price <= 0)
+            {
+                JOptionPane.showMessageDialog(this, "Le prix doit être supérieur à 0");
+                return;
+            }
+        }
+        catch(NumberFormatException e)
+        {
+            JOptionPane.showMessageDialog(this, "Veuillez saisir un prix numérique valide.");
+            return;
+        }
+        
+        // Initialisation du DAO
+        CategorieDAO dao = new CategorieDAO();
+        
+        // Vérifier si la catégorie existe déjà
+        if(dao.isTypeDuplicate(category_type))
+        {
+            JOptionPane.showMessageDialog(this, "Cette catégorie existe déjà !", "Erreur", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Créer l'objet de l'enregistrement 
+        Categories newcategory = new Categories(category_type, price, max_capacity);
+        
+        if(dao.addCategory(newcategory))
+        {
+            JOptionPane.showMessageDialog(this, "Catégorie ajoutée avec succès ! ");
+            
+            // Vider les champs
+            txtCategoryType.setText("");
+            spnMaxCapacity.setValue(1);
+            txtNightlyPrice.setText("");
+            
+            // On va écrire une méthode pour raffraîchir le tableau et on va l'importer ici
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "Erreur technique lors de l'enregistrement.", "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnAddCategoryActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddCategory;
     private javax.swing.JButton btnAddRoom;
     private javax.swing.JButton btnAddUser;
+    private javax.swing.JButton btnDeleteCategory;
     private javax.swing.JButton btnDeleteRoom;
     private javax.swing.JButton btnDeleteUser;
+    private javax.swing.JButton btnUpdateCategory;
     private javax.swing.JButton btnUpdateRoom;
     private javax.swing.JButton btnUpdateUser;
     private javax.swing.JComboBox<String> cbCategory;
@@ -717,6 +913,9 @@ public class panelSettings extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -725,19 +924,25 @@ public class panelSettings extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel pnlFomrCham;
     private javax.swing.JPanel pnlFormUser;
     private javax.swing.JSpinner spnMaxCapacity;
-    private javax.swing.JSpinner spnPriceNight;
+    private javax.swing.JPanel tabCategories;
     private javax.swing.JPanel tabRooms;
     private javax.swing.JPanel tabUsers;
+    private javax.swing.JTable tableCategories;
     private javax.swing.JTable tableChambres;
     private javax.swing.JTable tableUsers;
+    private javax.swing.JTextField txtCategoryType;
+    private javax.swing.JTextField txtNightlyPrice;
     private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtRoomNumber;
+    private javax.swing.JTextField txtSearchCategory;
     private javax.swing.JTextField txtSearchRoom;
     private javax.swing.JTextField txtSearchUser;
     private javax.swing.JTextField txtUsername;

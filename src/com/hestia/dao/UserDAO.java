@@ -67,12 +67,12 @@ public class UserDAO {
     
     // Méthode pour vérifier si l'utilisateur existe déjà
     public boolean isUsernameTaken(String username) {
-        String sql = "SELECT COUNT(*) FROM Users WHERE username = ?";
+        String sql = "SELECT COUNT(*) FROM Users WHERE LOWER(username) = LOWER(?)";
 
         try (Connection con = DatabaseConnection.getConnect();
              PreparedStatement pst = con.prepareStatement(sql)) {
 
-            pst.setString(1, username);
+            pst.setString(1, username.trim());
 
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {

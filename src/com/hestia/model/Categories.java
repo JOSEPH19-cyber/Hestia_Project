@@ -13,21 +13,21 @@ public class Categories {
     // Déclarations des attributs
     private int category_id;
     private String category_type;
-    private int nightly_price;
+    private double nightly_price;
     private int  max_capacity;
     
     // Constructeur vise
     public Categories(){}
     
     // Constructeur pour l'insertion
-    public Categories(String category_type, int nightly_price, int max_capacity) {
+    public Categories(String category_type, double nightly_price, int max_capacity) {
         this.category_type = category_type;
         this.nightly_price = nightly_price;
         this.max_capacity = max_capacity;
     }
     
     // Constructeur pour la récupération
-    public Categories (int category_id, String category_type, int nightly_price, int max_capacity)
+    public Categories (int category_id, String category_type, double nightly_price, int max_capacity)
     {
         this.category_id = category_id;
         this.category_type = category_type;
@@ -38,12 +38,12 @@ public class Categories {
     // Getters
     public int getCategoryid(){return category_id;}
     public String getCategorytype(){return category_type;}
-    public int getNightlyprice(){return nightly_price;}
+    public double getNightlyprice(){return nightly_price;}
     public int getMaxcapacity(){return max_capacity;}
     
     // Setters
     public void setCategoryid(int category_id){this.category_id = category_id;}
     public void setCategorytype(String category_type){this.category_type = category_type;}
-    public void setNightlyprice(int nightly_price){this.nightly_price = nightly_price;}
+    public void setNightlyprice(double nightly_price){this.nightly_price = nightly_price;}
     public void setMax_capacity(int max_capacity){this.max_capacity = max_capacity;}
 }
