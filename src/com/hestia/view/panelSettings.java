@@ -650,6 +650,7 @@ public final class panelSettings extends javax.swing.JPanel {
         btnDeleteCategory.setMaximumSize(new java.awt.Dimension(120, 30));
         btnDeleteCategory.setMinimumSize(new java.awt.Dimension(120, 30));
         btnDeleteCategory.setPreferredSize(new java.awt.Dimension(120, 30));
+        btnDeleteCategory.addActionListener(this::btnDeleteCategoryActionPerformed);
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -1025,6 +1026,42 @@ public final class panelSettings extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Prix invalide !");
         }
     }//GEN-LAST:event_btnUpdateCategoryActionPerformed
+
+    private void btnDeleteCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteCategoryActionPerformed
+        
+        int selectedRow = tableCategories.getSelectedRow();
+    
+        // Vérifier si une ligne a été sélectionnée
+        if(selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner la catégorie à supprimer !");
+            return; 
+        }
+    
+        // Récupérer l'id à supprimer
+        int id = Integer.parseInt(tableCategories.getValueAt(selectedRow, 0).toString());
+
+        // Demander la confirmation
+        int opt = JOptionPane.showConfirmDialog(this, 
+                "Êtes-vous sûr de vouloir supprimer définitivement cette catégorie ?", 
+                "Confirmation de suppression", 
+                JOptionPane.YES_NO_OPTION, 
+                JOptionPane.WARNING_MESSAGE); 
+            
+        if (opt == JOptionPane.YES_OPTION) {
+            CategorieDAO dao = new CategorieDAO();
+
+            // Exécuter la suppression
+            if (dao.deleteCategory(id)) {
+                JOptionPane.showMessageDialog(this, "Catégorie supprimée avec succès !");
+
+                // Mise à jour de l'interface
+                loadCategoriesTable(); 
+                clearCategoryFields(); 
+            } else {
+                JOptionPane.showMessageDialog(this, "Erreur : Impossible de supprimer la catégorie.");
+            }
+        }
+    }//GEN-LAST:event_btnDeleteCategoryActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
