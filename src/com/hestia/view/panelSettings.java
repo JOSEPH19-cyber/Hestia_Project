@@ -9,6 +9,8 @@ import com.hestia.dao.UserDAO;
 import com.hestia.model.Users;
 import com.hestia.dao.CategorieDAO;
 import com.hestia.model.Categories;
+import com.hestia.dao.RoomDAO;
+import com.hestia.model.Rooms;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -31,6 +33,7 @@ public final class panelSettings extends javax.swing.JPanel {
         loadCategoriesTable();
         setupCategoryTableSelectionListener();
         fillRoomCategoryCombo();
+        loadRoomsTable();
         tableUsers.setDefaultEditor(Object.class, null);
     }
     
@@ -253,6 +256,33 @@ public final class panelSettings extends javax.swing.JPanel {
         }
     }
     
+    // Méthode pour afficher les informations des chambres dans tabRooms
+    private void loadRoomsTable()
+    {
+        // Récupérer le modèle du tableau
+        DefaultTableModel model = (DefaultTableModel) tableRooms.getModel();
+        
+        // Vider le tableau
+        model.setRowCount(0);
+        
+        // Appel de la DAO pour récupérer la liste 
+        RoomDAO rdao = new RoomDAO();
+        List<Rooms> liste = rdao.getAllRooms();
+        
+        // Boucler pour ajouter chaligne au tableau
+        for(Rooms r : liste)
+        {
+            Object[] row = 
+            {
+                r.getRoomid(),
+                r.getRoomnumber(),
+                r.getCategorytype(),
+                r.getStatus()
+            };
+            model.addRow(row);
+        }
+    }
+    
     // Méthode pour vider les champs du formulaire Utilisateur
     private void clearUserFields() 
     {
@@ -297,7 +327,7 @@ public final class panelSettings extends javax.swing.JPanel {
         jLabel10 = new javax.swing.JLabel();
         txtSearchRoom = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableChambres = new javax.swing.JTable();
+        tableRooms = new javax.swing.JTable();
         tabUsers = new javax.swing.JPanel();
         pnlFormUser = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -449,7 +479,7 @@ public final class panelSettings extends javax.swing.JPanel {
 
         tabRooms.add(pnlFomrCham, java.awt.BorderLayout.PAGE_START);
 
-        tableChambres.setModel(new javax.swing.table.DefaultTableModel(
+        tableRooms.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -457,10 +487,10 @@ public final class panelSettings extends javax.swing.JPanel {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "NUMEROS CHAMBRES", "CATEGORIES", "STATUS"
             }
         ));
-        jScrollPane1.setViewportView(tableChambres);
+        jScrollPane1.setViewportView(tableRooms);
 
         tabRooms.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
@@ -808,7 +838,48 @@ public final class panelSettings extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRoomActionPerformed
-        // TODO add your handling code here:
+        
+        // Récupérer et nettoyer les données
+        String room_number = txtRoomNumber.getText().trim();
+        String status = "DISPONIBLE"; 
+    
+        // Vérifier si le numéro de la chambre est vide
+        if(room_number.isEmpty()) 
+        {
+            JOptionPane.showMessageDialog(this, "Veuillez saisir un numéro de chambre !");
+            return;
+        }
+    
+        // Instanciation de la DAO
+        RoomDAO rDAO = new RoomDAO();
+
+        // Vérififier si une chambre existe
+        if(rDAO.isRoomNumberExists(room_number)) 
+        {
+            JOptionPane.showMessageDialog(this, "Ce numéro de chambre existe déjà. Veuillez en choisir un autre.");
+            return; 
+        }
+    
+        // 3. Récupérer la catégorie
+        Categories selectedCat = (Categories) cbCategory.getSelectedItem();
+        if(selectedCat == null) 
+        {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une catégorie !");
+            return;
+        }
+    
+        // Création de l'objet et enregistrement
+        Rooms room = new Rooms(room_number, selectedCat.getCategoryid(), status);
+        
+        if(rDAO.addRoom(room)) 
+        {
+            JOptionPane.showMessageDialog(this, "Chambre ajoutée avec succès !");
+            txtRoomNumber.setText(""); 
+        } 
+        else 
+        {
+            JOptionPane.showMessageDialog(this, "Une erreur est survenue lors de l'enregistrement.");
+        }
     }//GEN-LAST:event_btnAddRoomActionPerformed
 
     private void btnAddUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddUserActionPerformed
@@ -1169,7 +1240,7 @@ public final class panelSettings extends javax.swing.JPanel {
     private javax.swing.JPanel tabRooms;
     private javax.swing.JPanel tabUsers;
     private javax.swing.JTable tableCategories;
-    private javax.swing.JTable tableChambres;
+    private javax.swing.JTable tableRooms;
     private javax.swing.JTable tableUsers;
     private javax.swing.JTextField txtCategoryType;
     private javax.swing.JTextField txtNightlyPrice;
