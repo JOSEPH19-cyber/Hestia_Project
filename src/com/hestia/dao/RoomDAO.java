@@ -86,4 +86,26 @@ public class RoomDAO {
         }
         return list;
     }
+    
+    // Méthode pour ajouter une chambre
+    public boolean updateRoom(Rooms room) {
+        String sql = "UPDATE Rooms SET room_number = ?, category_id = ?, status = ? WHERE room_id = ?";
+
+        try (Connection con = DatabaseConnection.getConnect();
+             PreparedStatement pst = con.prepareStatement(sql)) 
+        {  
+
+            pst.setString(1, room.getRoomnumber());
+            pst.setInt(2, room.getCategoryid());
+            pst.setString(3, room.getStatus());
+            pst.setInt(4, room.getRoomid());
+
+            // Rétourner le nombre des lignes inésérées
+            return pst.executeUpdate() > 0; 
+
+        } catch (SQLException ex) {
+            System.err.println("Erreur RoomDAO (Enregistrement) : " + ex.getMessage());
+            return false;
+        }
+    }
 }

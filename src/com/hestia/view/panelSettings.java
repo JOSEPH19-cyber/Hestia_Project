@@ -34,6 +34,7 @@ public final class panelSettings extends javax.swing.JPanel {
         setupCategoryTableSelectionListener();
         fillRoomCategoryCombo();
         loadRoomsTable();
+        setupRoomTableSelectionListener();
         tableUsers.setDefaultEditor(Object.class, null);
     }
     
@@ -283,6 +284,34 @@ public final class panelSettings extends javax.swing.JPanel {
         }
     }
     
+    // Méthode pour remplir les champs des chambres à la selection d'une ligne
+    private void setupRoomTableSelectionListener() {
+        tableRooms.getSelectionModel().addListSelectionListener((ListSelectionEvent event) -> {
+            // Agir si l'action de selection est terminée
+            if (!event.getValueIsAdjusting()) {
+                // Vérifier si une ligne a été selectionée
+                int row = tableRooms.getSelectedRow();
+                if (row != -1) {
+                    // Extraire les donneés des cellules du tableau
+                    String number = tableRooms.getValueAt(row, 1).toString();
+                    String category = tableRooms.getValueAt(row, 2).toString();
+                    
+                    // Renvoyer les données vers les champs
+                    txtRoomNumber.setText(number);
+                    // On boucle sur les objets de la combo pour trouver celui qui a le même nom
+                    for (int i = 0; i < cbCategory.getItemCount(); i++) {
+                        Categories cat = (Categories) cbCategory.getItemAt(i);
+                        if (cat.getCategorytype().equals(category)) {
+                            cbCategory.setSelectedItem(cat);
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    
     // Méthode pour vider les champs du formulaire Utilisateur
     private void clearUserFields() 
     {
@@ -299,6 +328,14 @@ public final class panelSettings extends javax.swing.JPanel {
         spnMaxCapacity.setValue(1);
         txtNightlyPrice.setText("");
         tableCategories.clearSelection();
+    }
+    
+    // Métode pour vider les champs du formulaire chambre
+    private void clearRoomFields()
+    {
+        txtRoomNumber.setText("");
+        cbCategory.setSelectedIndex(0);
+        tableRooms.clearSelection();
     }
             
     
@@ -388,7 +425,6 @@ public final class panelSettings extends javax.swing.JPanel {
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setText("Catégorie");
 
-        cbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbCategory.setMaximumSize(new java.awt.Dimension(150, 30));
         cbCategory.setMinimumSize(new java.awt.Dimension(150, 30));
         cbCategory.setPreferredSize(new java.awt.Dimension(150, 30));
@@ -409,6 +445,7 @@ public final class panelSettings extends javax.swing.JPanel {
         btnUpdateRoom.setMaximumSize(new java.awt.Dimension(120, 30));
         btnUpdateRoom.setMinimumSize(new java.awt.Dimension(120, 30));
         btnUpdateRoom.setPreferredSize(new java.awt.Dimension(120, 30));
+        btnUpdateRoom.addActionListener(this::btnUpdateRoomActionPerformed);
 
         btnDeleteRoom.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnDeleteRoom.setText("SUPPRIMER");
@@ -479,6 +516,7 @@ public final class panelSettings extends javax.swing.JPanel {
 
         tabRooms.add(pnlFomrCham, java.awt.BorderLayout.PAGE_START);
 
+        tableRooms.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         tableRooms.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -489,8 +527,22 @@ public final class panelSettings extends javax.swing.JPanel {
             new String [] {
                 "ID", "NUMEROS CHAMBRES", "CATEGORIES", "STATUS"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tableRooms);
+        if (tableRooms.getColumnModel().getColumnCount() > 0) {
+            tableRooms.getColumnModel().getColumn(0).setResizable(false);
+            tableRooms.getColumnModel().getColumn(1).setResizable(false);
+            tableRooms.getColumnModel().getColumn(2).setResizable(false);
+            tableRooms.getColumnModel().getColumn(3).setResizable(false);
+        }
 
         tabRooms.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
@@ -874,7 +926,11 @@ public final class panelSettings extends javax.swing.JPanel {
         if(rDAO.addRoom(room)) 
         {
             JOptionPane.showMessageDialog(this, "Chambre ajoutée avec succès !");
-            txtRoomNumber.setText(""); 
+            
+            // Mise à jour de l'interface
+            loadRoomsTable();
+            clearRoomFields();
+            txtRoomNumber.requestFocus();
         } 
         else 
         {
@@ -1201,6 +1257,52 @@ public final class panelSettings extends javax.swing.JPanel {
         filterCategoriesTable(txtSearchCategory.getText().trim());
     }//GEN-LAST:event_txtSearchCategoryKeyReleased
 
+    private void btnUpdateRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateRoomActionPerformed
+        
+        //  Vérifier si une ligne est sélectionnée
+        int selectedRow = tableRooms.getSelectedRow();
+        
+        if(selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une chambre dans le tableau !");
+            return;
+        }
+
+        // Récupérer et nettoyer les données
+        int id = (int) tableRooms.getValueAt(selectedRow, 0);
+        String room_number = txtRoomNumber.getText().trim();
+        String status = "DISPONIBLE"; 
+
+        if(room_number.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Veuillez saisir un numéro de chambre !");
+            return;
+        }
+
+        // Récupérer la catégorie sélectionnée
+        Categories selectedCat = (Categories) cbCategory.getSelectedItem();
+        if(selectedCat == null) {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une catégorie !");
+            return;
+        }
+
+        // Créer l'objet avec l'ID et appeler la DAO
+        Rooms room = new Rooms(id, room_number, selectedCat.getCategoryid(), status);
+        RoomDAO rDAO = new RoomDAO();
+
+        if(rDAO.updateRoom(room)) 
+        {
+            JOptionPane.showMessageDialog(this, "Chambre mise à jour avec succès !");
+            
+            // Mise à jour de l'interface
+            loadRoomsTable();
+            clearRoomFields();
+            txtRoomNumber.requestFocus();
+        }
+        else 
+        {
+            JOptionPane.showMessageDialog(this, "Erreur lors de la mise à jour.");
+        }
+    }//GEN-LAST:event_btnUpdateRoomActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddCategory;
@@ -1212,7 +1314,7 @@ public final class panelSettings extends javax.swing.JPanel {
     private javax.swing.JButton btnUpdateCategory;
     private javax.swing.JButton btnUpdateRoom;
     private javax.swing.JButton btnUpdateUser;
-    private javax.swing.JComboBox<String> cbCategory;
+    private javax.swing.JComboBox<Categories> cbCategory;
     private javax.swing.JComboBox<String> cbRole;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
