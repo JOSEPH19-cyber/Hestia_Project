@@ -30,6 +30,7 @@ public final class panelSettings extends javax.swing.JPanel {
         setupUserTableSelectionListener();
         loadCategoriesTable();
         setupCategoryTableSelectionListener();
+        fillRoomCategoryCombo();
         tableUsers.setDefaultEditor(Object.class, null);
     }
     
@@ -204,6 +205,52 @@ public final class panelSettings extends javax.swing.JPanel {
                 }
             }
         });
+    }
+    
+    // Méthode pour filtrer une Catégorie
+    private void filterCategoriesTable(String searchText) {
+        CategorieDAO dao = new CategorieDAO();
+        
+        // Récupérer la liste filtrée depuis le DAO
+        List<Categories> categories = dao.searchCategories(searchText);
+
+        DefaultTableModel model = (DefaultTableModel) tableCategories.getModel();
+        // on vide le tableau pour rafraîchir
+        model.setRowCount(0); 
+
+        for (Categories c : categories) {
+            Object[] row = {
+                c.getCategoryid(),
+                c.getCategorytype(),
+                c.getNightlyprice(),
+                c.getMaxcapacity()
+            };
+            model.addRow(row);
+        }
+    }
+    
+    // Méthode pour charger les catégories dans la combo de tabRooms
+    public void fillRoomCategoryCombo()
+    {
+         try {
+            CategorieDAO dao = new CategorieDAO();
+            List<Categories> liste = dao.getAllCategories();
+
+            // On récupère le modèle interne de la JComboBox. 
+            javax.swing.DefaultComboBoxModel model = (javax.swing.DefaultComboBoxModel) cbCategory.getModel();
+
+            // On vide proprement
+            model.removeAllElements();
+
+            if (liste != null) {
+                for (Categories c : liste) {
+                    // On ajoute l'objet au modèle
+                    model.addElement(c); 
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur de chargement : " + e.getMessage());
+        }
     }
     
     // Méthode pour vider les champs du formulaire Utilisateur
@@ -486,6 +533,7 @@ public final class panelSettings extends javax.swing.JPanel {
         txtSearchUser.setMaximumSize(new java.awt.Dimension(200, 30));
         txtSearchUser.setMinimumSize(new java.awt.Dimension(200, 30));
         txtSearchUser.setPreferredSize(new java.awt.Dimension(200, 30));
+        txtSearchUser.addActionListener(this::txtSearchUserActionPerformed);
         txtSearchUser.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtSearchUserKeyReleased(evt);
@@ -630,6 +678,12 @@ public final class panelSettings extends javax.swing.JPanel {
         txtSearchCategory.setMaximumSize(new java.awt.Dimension(200, 30));
         txtSearchCategory.setMinimumSize(new java.awt.Dimension(200, 30));
         txtSearchCategory.setPreferredSize(new java.awt.Dimension(200, 30));
+        txtSearchCategory.addActionListener(this::txtSearchCategoryActionPerformed);
+        txtSearchCategory.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSearchCategoryKeyReleased(evt);
+            }
+        });
 
         btnAddCategory.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnAddCategory.setText("AJOUTER");
@@ -1062,6 +1116,19 @@ public final class panelSettings extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_btnDeleteCategoryActionPerformed
+
+    private void txtSearchUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchUserActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtSearchUserActionPerformed
+
+    private void txtSearchCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchCategoryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtSearchCategoryActionPerformed
+
+    private void txtSearchCategoryKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchCategoryKeyReleased
+        // On récupère le texte et on lance la recherche
+        filterCategoriesTable(txtSearchCategory.getText().trim());
+    }//GEN-LAST:event_txtSearchCategoryKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -46,4 +46,11 @@ public class Categories {
     public void setCategorytype(String category_type){this.category_type = category_type;}
     public void setNightlyprice(double nightly_price){this.nightly_price = nightly_price;}
     public void setMaxcapacity(int max_capacity){this.max_capacity = max_capacity;}
+    
+    
+    // Méthode pour afficher les catégories dans la combo pour chambre
+    @Override
+    public String toString() {
+        return category_type; 
+    }
 }

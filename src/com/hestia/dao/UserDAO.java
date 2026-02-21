@@ -208,7 +208,7 @@ public class UserDAO {
                 String pass = rs.getString("password");
                 String role = rs.getString("role");
                 
-                // Créer l'objet Users les données récupérées
+                // Créer l'objet Users avec les données récupérées
                 Users user = new Users(id, name, pass, role);
                 
                 // Ajouter l'objet à la liste

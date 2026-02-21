@@ -134,4 +134,39 @@ public class CategorieDAO {
         }
         return false;
     }
+    
+    // Méthode pour rechercher une catégorie
+    public List<Categories> searchCategories(String search) {
+        List<Categories> list = new ArrayList<>();
+        String sql = "SELECT * FROM Categories WHERE category_type LIKE ?"; 
+        
+        try(Connection con = DatabaseConnection.getConnect();
+            PreparedStatement pst = con.prepareStatement(sql))
+        {
+            // Appliquer le filtrage sur le type de catégorie
+            pst.setString(1, "%" + search + "%");
+            
+            ResultSet rs = pst.executeQuery();
+            while(rs.next())
+            {
+                // Récupérer les données de la ligne actuelle
+                int id = rs.getInt("category_id");
+                String type = rs.getString("category_type");
+                double price = rs.getDouble("nightly_price");
+                int capacity = rs.getInt("max_capacity");
+                
+                // Créer l'objet Categories avec les données récupérées
+                Categories cat = new Categories(id, type, price, capacity);
+                
+                // Ajouter l'objet à la liste
+                list.add(cat);
+            }
+        }
+        catch(SQLException e)
+        {
+            System.err.println("Erreur lors de la recherche : " + e.getMessage());
+            
+        }
+        return list;
+    }
 }
